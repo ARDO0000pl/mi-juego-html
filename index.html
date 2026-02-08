@@ -178,17 +178,33 @@
             cursor: pointer;
             border: 3px solid #ddd;
         }
+
+        /* ESTILO DEL FOOTER SOLICITADO */
+        footer {
+            background: #333;
+            color: #fff;
+            padding: 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            border-top: 5px solid #6200ea;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            font-weight: bold;
+        }
+
+        .footer-name {
+            color: #ff9100;
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+        
     </style>
 </head>
 <body>
-
-<footer id="footer" style="margin-top:30px; padding:15px; background:#6200ea; color:white; font-family:'Nunito', sans-serif; font-size:16px;">
-    © <span id="year"></span> Emmily Johanna Gonzalez Mejias - Bogotá
-</footer>
-<!-- Scripts del juego -->
-<script>
-// Inicializa tu juego
-init();
     
 <header>🦢 MEGA ENGLISH GOOSE 60</header>
 
@@ -208,6 +224,14 @@ init();
 <div id="modal">
     <div id="modal-content"></div>
 </div>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-name">EMMILY JOHANNA GONZALEZ MEJIAS</div>
+        <div>BOGOTÁ, COLOMBIA</div>
+        <div id="auto-date"></div>
+    </div>
+</footer>    
 
 <script>
 const gameData = [];
@@ -282,7 +306,10 @@ function init() {
     });
     updateLives();
 }
-
+// FECHA Y HORA AUTOMÁTICA
+    const now = new Date();
+    document.getElementById('auto-date').innerText = now.toLocaleString();
+}
 function updateLives() {
     document.getElementById('lives-container').innerText = "❤️".repeat(lives);
     if(lives <= 0) {
@@ -392,17 +419,9 @@ function check(idx, choice) {
 init();
 <script>
 
-
-// Mostrar año actual automáticamente
-window.addEventListener('DOMContentLoaded', () => {
-    const yearSpan = document.getElementById('year');
-    const now = new Date();
-    yearSpan.innerText = now.getFullYear();
-});
-</script>
-
 </body>
 </html>
+
 
 
 
