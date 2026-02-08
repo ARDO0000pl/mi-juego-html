@@ -51,6 +51,9 @@
             font-size: 24px;
             font-weight: 900;
             border-bottom: 4px solid #ddd;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         #dice-box { 
@@ -105,8 +108,8 @@
             padding: 20px;
             display: grid;
             grid-template-columns: repeat(10, 1fr);
-            gap: 8px;
-            max-width: 1200px;
+            gap: 10px;
+            max-width: 1100px;
             margin: auto;
             flex: 1;
         }
@@ -121,8 +124,9 @@
             justify-content: center;
             align-items: center;
             font-weight: 900;
-            font-size: 18px;
+            font-size: 16px;
             transition: 0.3s;
+            position: relative;
         }
 
         .cell-a1 { border-color: var(--a1-color); color: var(--a1-color); }
@@ -130,84 +134,81 @@
         .cell-b1 { border-color: var(--b1-color); color: var(--b1-color); }
 
         .cell.active { 
-            transform: scale(1.15); 
+            transform: scale(1.2); 
             box-shadow: 0 0 25px rgba(98,0,234,0.6);
             background: #f3e5f5;
-            z-index: 5;
+            z-index: 10;
+            border-color: #6200ea;
         }
 
         #modal {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.85);
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
-            padding: 10px;
+            z-index: 2000;
+            padding: 20px;
         }
 
         #modal-content {
             background: white;
-            width: 95%;
-            max-width: 700px;
+            width: 100%;
+            max-width: 600px;
             border-radius: 30px;
-            padding: 30px;
-            border: 10px solid #6200ea;
-            max-height: 90vh;
+            padding: 25px;
+            border: 8px solid #6200ea;
+            max-height: 85vh;
             overflow-y: auto;
         }
 
         .expla-card {
             background: #fffde7;
-            padding: 20px;
+            padding: 15px;
             border-radius: 20px;
-            border: 4px dashed #fbc02d;
+            border: 3px dashed #fbc02d;
             text-align: left;
             margin-bottom: 20px;
         }
 
         .option-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            grid-template-columns: 1fr;
+            gap: 10px;
         }
 
         .opt-btn {
-            background: #f5f5f5;
-            padding: 20px;
+            background: #f0f0f0;
+            padding: 15px;
             border-radius: 15px;
-            font-size: 20px;
-            font-weight: 900;
+            font-size: 18px;
+            font-weight: 800;
             cursor: pointer;
             border: 3px solid #ddd;
+            transition: 0.2s;
         }
+
+        .opt-btn:hover { background: #e0e0e0; border-color: #bbb; }
 
         footer {
             background: #333;
             color: #fff;
             padding: 20px;
             margin-top: 40px;
-            font-size: 14px;
             border-top: 5px solid #6200ea;
         }
 
-        .footer-content {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            font-weight: bold;
-        }
+        .footer-name { color: #ff9100; font-size: 18px; font-weight: bold; }
 
-        .footer-name {
-            color: #ff9100;
-            font-size: 18px;
-            letter-spacing: 1px;
+        @media (max-width: 800px) {
+            #board-container { grid-template-columns: repeat(5, 1fr); }
+            header { font-size: 28px; }
         }
     </style>
 </head>
 <body>
-    
+
 <header>🦢 MEGA ENGLISH GOOSE 60</header>
 
 <div id="status-bar">
@@ -228,53 +229,41 @@
 </div>
 
 <footer>
-    <div class="footer-content">
-        <div class="footer-name">EMMILY JOHANNA GONZALEZ MEJIAS</div>
-        <div>BOGOTÁ, COLOMBIA</div>
-        <div id="auto-date"></div>
-    </div>
-</footer>   
+    <div class="footer-name">EMMILY JOHANNA GONZALEZ MEJIAS</div>
+    <div>BOGOTÁ, COLOMBIA</div>
+    <div id="auto-date"></div>
+</footer>
 
 <script>
 const gameData = [];
 
+// POOLS DE PREGUNTAS CON RUTAS DE IMAGEN CORREGIDAS
 const a1_pool = [
-    {t: "Greetings", e: "¡Hola! Usamos 'Good morning', 'Good afternoon', 'Good evening' y 'Good night'.", q: "It's 8:00 AM, you say...", a: ["Good morning", "Good night", "Good afternoon"], c: 0, img:"Gemini_Generated_Image_wrln9uwrln9uwrln.png"},
-    {t: "Verbo To Be", e: "I am, You are, He/She/It is, We are, They are.", q: "The dog ___ very big and brown.", a: ["am", "are", "is"], c: 2, img:"English-Pronouns.jpg"},
-    {t: "Colores", e: "Red + Blue = Purple. Blue + Yellow = Green. Red + Yellow = Orange.", q: "Mixing Red and Blue gives you...", a: ["Green", "Purple", "Orange"], c: 1, img:"Gemini_Generated_Image_rzt5vsrzt5vsrzt5.png"},
-    {t: "School Objects", e: "Pencil (lápiz), Eraser (borrador), Ruler (regla).", q: "You use an ___ to fix mistakes.", a: ["Eraser", "Pencil", "Ruler"], c: 0, img:"Gemini_Generated_Image_z6ly3lz6ly3lz6ly.png"},
-    {t: "Family", e: "Father's sister = Aunt. Mother's brother = Uncle.", q: "Your father's sister is your...", a: ["Uncle", "Aunt", "Cousin"], c: 1, img:"Captura de pantalla_7-2-2026_192958_tse4.mm.bing.net.jpeg"},
-    {t: "Numbers 1-20", e: "11 (eleven), 12 (twelve), 13 (thirteen), 15 (fifteen).", q: "What is 7 + 8?", a: ["Thirteen", "Fourteen", "Fifteen"], c: 2, img:"afb15585b6e797d5a7b7dc75403b48b9.jpg"},
-    {t: "Feelings", e: "Happy (feliz), Sad (triste), Angry (enojado).", q: "I won a prize! I am so ___!", a: ["Sad", "Tired", "Happy"], c: 2, img:"feelings.png"},
-    {t: "Animals", e: "Cow (vaca), Pig (cerdo), Chicken (pollo).", q: "This animal gives us milk and says 'Moo'.", a: ["Pig", "Cow", "Chicken"], c: 1, img:"animals.png"},
-    {t: "The Weather", e: "Sunny (soleado), Rainy (lluvioso), Snowy (nieve).", q: "Take an umbrella! It is ___ today.", a: ["Sunny", "Rainy", "Cloudy"], c: 1, img:"e40ff2c11aecddc3e89da335e16e2871.png"},
-    {t: "Professions", e: "Doctor, Teacher, Chef, Pilot.", q: "A ___ cooks delicious food in a restaurant.", a: ["Chef", "Doctor", "Pilot"], c: 0, img:"professions.png"}
+    {t: "Greetings", e: "¡Hola! Usamos 'Good morning' (mañana) y 'Good night' (despedida noche).", q: "It's 8:00 AM, you say...", a: ["Good morning", "Good night", "Good afternoon"], c: 0, img:"img/Gemini_Generated_Image_wrln9uwrln9uwrln.png"},
+    {t: "Verbo To Be", e: "I am, You are, He/She/It is.", q: "The dog ___ big.", a: ["am", "are", "is"], c: 2, img:"img/English-Pronouns.jpg"},
+    {t: "Colores", e: "Red + Blue = Purple.", q: "Mixing Red and Blue gives...", a: ["Green", "Purple", "Orange"], c: 1, img:"img/Gemini_Generated_Image_rzt5vsrzt5vsrzt5.png"},
+    {t: "School", e: "Eraser = Borrador.", q: "You use an ___ to fix mistakes.", a: ["Eraser", "Pencil", "Ruler"], c: 0, img:"img/Gemini_Generated_Image_z6ly3lz6ly3lz6ly.png"},
+    {t: "Family", e: "Father's sister = Aunt.", q: "Your father's sister is your...", a: ["Uncle", "Aunt", "Cousin"], c: 1, img:"img/Captura de pantalla_7-2-2026_192958_tse4.mm.bing.net.jpeg"},
+    {t: "Animals", e: "Cow says Moo.", q: "This animal gives milk.", a: ["Pig", "Cow", "Chicken"], c: 1, img:"img/animals.png"},
+    {t: "Weather", e: "Rainy = Lluvioso.", q: "Take an umbrella! It is ___.", a: ["Sunny", "Rainy", "Cloudy"], c: 1, img:"img/e40ff2c11aecddc3e89da335e16e2871.png"}
 ];
 
 const a2_pool = [
-    {t: "Past Simple", e: "Acciones terminadas. Verbos regulares: -ED.", q: "Last night, I ___ a ghost story.", a: ["watch", "watched", "watching"], c: 1, img:"2e84570d-0a63-4def-9dfb-db2d31ccebaa.png"},
-    {t: "Comparatives", e: "Añadimos -ER than para comparar.", q: "A plane is ___ than a car.", a: ["faster", "fastest", "fast"], c: 0, img:"Comparative-Adjectives-and-Irregular-Adjectives-Table-Examples-1024x894.jpg"},
-    {t: "Prepositions", e: "In (dentro), On (sobre), Under (debajo).", q: "The letter B is ___ A and C.", a: ["next to", "behind", "between"], c: 2, img:"prepositions.png"}
+    {t: "Past Simple", e: "Regular verbs end in -ED.", q: "Last night, I ___ TV.", a: ["watch", "watched", "watching"], c: 1, img:"img/2e84570d-0a63-4def-9dfb-db2d31ccebaa.png"},
+    {t: "Comparatives", e: "Use -ER than (Faster than).", q: "A plane is ___ than a car.", a: ["faster", "fastest", "fast"], c: 0, img:"img/Comparative-Adjectives-and-Irregular-Adjectives-Table-Examples-1024x894.jpg"}
 ];
 
 const b1_pool = [
-    {t: "Present Perfect", e: "Have/Has + Participio.", q: "I ___ never seen a real tiger.", a: ["has", "do", "have"], c: 2, img:"present perfect.png"},
-    {t: "Modal: Should", e: "Consejos. 'You should eat healthy'.", q: "You look sick. You ___ see a doctor.", a: ["should", "mustn't", "would"], c: 0, img:"modal should.png"}
+    {t: "Present Perfect", e: "Have/Has + Past Participle.", q: "I ___ never seen a tiger.", a: ["has", "do", "have"], c: 2, img:"img/present perfect.png"},
+    {t: "Modal: Should", e: "Use 'Should' for advice.", q: "You look sick. You ___ see a doctor.", a: ["should", "mustn't", "would"], c: 0, img:"img/modal should.png"}
 ];
 
-// Llenar datos
+// Generar las 60 casillas
 for(let i=1; i<=60; i++) {
     let lvl, color, data;
-    if(i <= 20) {
-        lvl = "A1"; color="cell-a1";
-        data = a1_pool[(i-1) % a1_pool.length];
-    } else if(i <= 40) {
-        lvl = "A2"; color="cell-a2";
-        data = a2_pool[(i-1) % a2_pool.length];
-    } else {
-        lvl = "B1"; color="cell-b1";
-        data = b1_pool[(i-1) % b1_pool.length];
-    }
+    if(i <= 20) { lvl = "A1"; color="cell-a1"; data = a1_pool[(i-1) % a1_pool.length]; }
+    else if(i <= 40) { lvl = "A2"; color="cell-a2"; data = a2_pool[(i-1) % a2_pool.length]; }
+    else { lvl = "B1"; color="cell-b1"; data = b1_pool[(i-1) % b1_pool.length]; }
     gameData.push({ id: i, lvl, color, ...data });
 }
 
@@ -288,43 +277,39 @@ function init() {
         const d = document.createElement('div');
         d.className = `cell ${item.color}`;
         d.id = `c-${item.id}`;
-        d.innerHTML = `<span>${item.id}</span><small style="font-size:9px">${item.t}</small>`;
+        d.innerHTML = `<span>${item.id}</span><small style="font-size:8px">${item.t}</small>`;
         board.appendChild(d);
     });
-    updateLives();
-    const now = new Date();
-    document.getElementById('auto-date').innerText = now.toLocaleString();
+    updateStatus();
 }
 
-function updateLives() {
+function updateStatus() {
     document.getElementById('lives-container').innerText = "❤️".repeat(lives);
+    document.getElementById('pos-text').innerText = currentPos;
+    document.getElementById('auto-date').innerText = new Date().toLocaleString();
     if(lives <= 0) {
-        alert("💥 ¡Oh no! Intenta nuevamente 💥");
+        alert("💥 GAME OVER 💥");
         location.reload();
     }
 }
 
 function rollDice() {
     const diceDisplay = document.getElementById('dice-val');
-    const rollBtn = document.getElementById('roll-button');
-    rollBtn.disabled = true;
+    const btn = document.getElementById('roll-button');
+    btn.disabled = true;
     diceDisplay.classList.add('rolling');
     
-    let counter = 0;
-    const interval = setInterval(() => {
+    let count = 0;
+    const timer = setInterval(() => {
         diceDisplay.innerText = Math.floor(Math.random() * 6) + 1;
-        counter++;
-        if(counter > 12) {
-            clearInterval(interval);
+        if(count++ > 10) {
+            clearInterval(timer);
+            const roll = Math.floor(Math.random() * 6) + 1;
+            diceDisplay.innerText = roll;
             diceDisplay.classList.remove('rolling');
-            const finalRoll = Math.floor(Math.random() * 6) + 1;
-            diceDisplay.innerText = finalRoll;
-            setTimeout(() => {
-                movePlayer(finalRoll);
-                rollBtn.disabled = false;
-            }, 400);
+            setTimeout(() => { movePlayer(roll); btn.disabled = false; }, 500);
         }
-    }, 80);
+    }, 100);
 }
 
 function movePlayer(steps) {
@@ -334,71 +319,52 @@ function movePlayer(steps) {
     document.querySelectorAll('.cell').forEach(c => c.classList.remove('active'));
     const target = document.getElementById(`c-${currentPos}`);
     target.classList.add('active');
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
     
-    document.getElementById('pos-text').innerText = currentPos;
     document.getElementById('current-lvl-text').innerText = gameData[currentPos-1].lvl;
+    updateStatus();
     setTimeout(() => showExplanation(currentPos - 1), 600);
 }
 
 function showExplanation(idx) {
     const data = gameData[idx];
     const modal = document.getElementById('modal');
-    const content = document.getElementById('modal-content');
     modal.style.display = 'flex';
-    
-    content.innerHTML = `
-        <h1 style="color:#6200ea; font-family:'Fredoka One'; font-size:38px;">${data.t}</h1>
+    document.getElementById('modal-content').innerHTML = `
+        <h2 style="color:#6200ea">${data.t}</h2>
         <div class="expla-card">
-            <h3 style="font-size:24px; color:#2c3e50;">💡 Lección rápida:</h3>
-            <p style="font-size:22px; line-height:1.5; color:#444;">${data.e}</p>
-            <div style="text-align:center; margin-top:15px;">
-                <img src="${data.img}" alt="${data.t}" style="width:360px; max-width:95%; height:auto; border-radius:20px; border:4px solid #ccc;">
-            </div>
+            <p>${data.e}</p>
+            <img src="${data.img}" style="width:100%; border-radius:15px; margin-top:10px;" onerror="this.src='https://via.placeholder.com/300x200?text=Imagen+en+carpeta+img'">
         </div>
-        <button class="btn-dice" onclick="showQuestion(${idx})">¡ACEPTO EL RETO!</button>
+        <button class="btn-dice" onclick="showQuestion(${idx})">¡RETO!</button>
     `;
 }
 
 function showQuestion(idx) {
     const data = gameData[idx];
-    const content = document.getElementById('modal-content');
-    let opts = "";
-    data.a.forEach((o, i) => {
-        opts += `<div class="opt-btn" onclick="check(${idx}, ${i})">${o}</div>`;
-    });
-
-    content.innerHTML = `
-        <h2 style="font-size:32px; color:#ff9100;">🌟 PREGUNTA #${data.id} 🌟</h2>
-        <div style="background:#f0f7ff; padding:25px; border-radius:20px; margin-bottom:20px; border:4px solid #6200ea;">
-            <p style="font-size:28px; font-weight:900; color:#2c3e50;">${data.q}</p>
-        </div>
-        <div class="option-grid">${opts}</div>
+    let htmlOpts = data.a.map((opt, i) => `<div class="opt-btn" onclick="checkAnswer(${idx}, ${i})">${opt}</div>`).join("");
+    document.getElementById('modal-content').innerHTML = `
+        <h3>Pregunta #${data.id}</h3>
+        <p style="font-size:22px; font-weight:bold;">${data.q}</p>
+        <div class="option-grid">${htmlOpts}</div>
     `;
 }
 
-function check(idx, choice) {
-    const data = gameData[idx];
-    if(choice === data.c) {
-        alert("✨ ¡EXCELENTE! ✨\n¡Eres muy inteligente!");
+function checkAnswer(idx, choice) {
+    if(choice === gameData[idx].c) {
+        alert("✨ Correcto! ✨");
     } else {
         lives--;
-        alert("😲 ¡UPS!\nLa respuesta correcta era: " + data.a[data.c] + "\nPerdiste una vida ❤️");
-        updateLives();
+        alert("❌ Incorrecto. Era: " + gameData[idx].a[gameData[idx].c]);
+        updateStatus();
     }
     document.getElementById('modal').style.display = 'none';
-    
-    if(currentPos === 60) {
-        alert("🏆🎉 ¡FELICITACIONES! 🎉🏆\n¡Eres el maestro del inglés! Llegaste a la meta final.");
-        location.reload();
-    }
+    if(currentPos === 60 && lives > 0) alert("🏆 ¡VICTORIA TOTAL! 🏆");
 }
 
-// Iniciar el juego
 init();
 </script>
-
 </body>
 </html>
-
 
 
