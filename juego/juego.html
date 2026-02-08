@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 Super English Adventure 60 🌟</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;900&display=swap');
+
+        :root {
+            --a1-color: #4CAF50;
+            --a2-color: #FFC107;
+            --b1-color: #FF5722;
+            --text-shadow: 2px 2px 0px #000;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Nunito', sans-serif;
+            background: #e0f7fa;
+            text-align: center;
+            color: #2c3e50;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: #6200ea;
+            color: white;
+            padding: 20px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 45px;
+            text-shadow: var(--text-shadow);
+            border-bottom: 8px solid #3700b3;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        #status-bar {
+            background: white;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            font-size: 24px;
+            font-weight: 900;
+            border-bottom: 4px solid #ddd;
+        }
+
+        #dice-box { 
+            margin: 20px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #dice-val {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border: 5px solid #333;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+            margin-bottom: 15px;
+            box-shadow: 0 6px 0 #999;
+            font-family: 'Fredoka One', cursive;
+        }
+
+        .rolling {
+            animation: rollDiceAnim 0.1s infinite;
+        }
+
+        @keyframes rollDiceAnim {
+            0% { transform: rotate(0deg) scale(1.1) translateX(2px); }
+            50% { transform: rotate(10deg) scale(1.1) translateX(-2px); }
+            100% { transform: rotate(-10deg) scale(1.1) translateY(2px); }
+        }
+
+        .btn-dice {
+            background: #ff9100;
+            color: white;
+            font-family: 'Fredoka One', cursive;
+            padding: 15px 40px;
+            font-size: 28px;
+            border: none;
+            border-radius: 50px;
+            border-bottom: 6px solid #ef6c00;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+
+        .btn-dice:active { transform: translateY(4px); border-bottom-width: 2px; }
+        .btn-dice:disabled { background: #ccc; border-bottom: 6px solid #999; }
+
+        #board-container {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 8px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            background: white;
+            border: 4px solid #bcbcbc;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: 900;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        .cell-a1 { border-color: var(--a1-color); color: var(--a1-color); }
+        .cell-a2 { border-color: var(--a2-color); color: #b78a00; }
+        .cell-b1 { border-color: var(--b1-color); color: var(--b1-color); }
+
+        .cell.active { 
+            transform: scale(1.15); 
+            box-shadow: 0 0 25px rgba(98,0,234,0.6);
+            background: #f3e5f5;
+            z-index: 5;
+        }
+
+        #modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 10px;
+        }
+
+        #modal-content {
+            background: white;
+            width: 95%;
+            max-width: 700px;
+            border-radius: 30px;
+            padding: 30px;
+            border: 10px solid #6200ea;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .expla-card {
+            background: #fffde7;
+            padding: 20px;
+            border-radius: 20px;
+            border: 4px dashed #fbc02d;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .option-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .opt-btn {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 20px;
+            font-weight: 900;
+            cursor: pointer;
+            border: 3px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+
+<header>🦢 MEGA ENGLISH GOOSE 60</header>
+
+<div id="status-bar">
+    <div>Nivel: <span id="current-lvl-text">A1</span></div>
+    <div>Vidas: <span id="lives-container">❤️❤️❤️</span></div>
+    <div>Casilla: <span id="pos-text">0</span>/60</div>
+</div>
+
+<div id="dice-box">
+    <div id="dice-val">🎲</div>
+    <button id="roll-button" class="btn-dice" onclick="rollDice()">¡LANZAR DADO!</button>
+</div>
+
+<div id="board-container"></div>
+
+<div id="modal">
+    <div id="modal-content"></div>
+</div>
+
+<script>
+const gameData = [];
+// --- BANCO DE PREGUNTAS AMPLIADO (V2) ---
+const a1_pool = [
+    {t: "Greetings", e: "¡Hola! Usamos 'Good morning' (mañana), 'Good afternoon' (tarde), 'Good evening' (noche al llegar) y 'Good night' (noche al irse).", q: "It's 8:00 AM, you say...", a: ["Good morning", "Good night", "Good afternoon"], c: 0, img:"Gemini_Generated_Image_wrln9uwrln9uwrln.png"
+},
+    {t: "Verbo To Be", e: "I am, You are, He/She/It is, We are, They are.", q: "The dog ___ very big and brown.", a: ["am", "are", "is"], c: 2, img:"English-Pronouns.jpg"},
+    {t: "Colores", e: "Red + Blue = Purple. Blue + Yellow = Green. Red + Yellow = Orange.", q: "Mixing Red and Blue gives you...", a: ["Green", "Purple", "Orange"], c: 1, img:"Gemini_Generated_Image_rzt5vsrzt5vsrzt5.png"},
+    {t: "School Objects", e: "Pencil (lápiz), Eraser (borrador), Ruler (regla), Backpack (mochila).", q: "You use an ___ to fix mistakes.", a: ["Eraser", "Pencil", "Ruler"], c: 0, img:"Gemini_Generated_Image_z6ly3lz6ly3lz6ly.png"},
+    {t: "Family", e: "Father's sister = Aunt. Mother's brother = Uncle. Aunt's son = Cousin.", q: "Your father's sister is your...", a: ["Uncle", "Aunt", "Cousin"], c: 1, img:src="Captura de pantalla_7-2-2026_192958_tse4.mm.bing.net.jpeg"},
+    {t: "Numbers 1-20", e: "11 (eleven), 12 (twelve), 13 (thirteen), 15 (fifteen).", q: "What is 7 + 8?", a: ["Thirteen", "Fourteen", "Fifteen"], c: 2, img:"afb15585b6e797d5a7b7dc75403b48b9.jpg"},
+    {t: "Feelings", e: "Happy (feliz), Sad (triste), Angry (enojado), Thirsty (sediento).", q: "I won a prize! I am so ___!", a: ["Sad", "Tired", "Happy"], c: 2, img:"feelings.png"},
+    {t: "Animals", e: "Cow (vaca), Pig (cerdo), Chicken (pollo), Sheep (oveja).", q: "This animal gives us milk and says 'Moo'.", a: ["Pig", "Cow", "Chicken"], c: 1, img:"animals.png"},
+    {t: "The Weather", e: "Sunny (soleado), Rainy (lluvioso), Snowy (nieve), Windy (viento).", q: "Take an umbrella! It is ___ today.", a: ["Sunny", "Rainy", "Cloudy"], c: 1, img:"e40ff2c11aecddc3e89da335e16e2871.png"},
+    {t: "Professions", e: "Doctor (médico), Teacher (profe), Chef (cocinero), Pilot (piloto).", q: "A ___ cooks delicious food in a restaurant.", a: ["Chef", "Doctor", "Pilot"], c: 0, img:"professions.png"}
+];
+
+const a2_pool = [
+    {t: "Past Simple", e: "Acciones terminadas. Verbos regulares: -ED (Watch -> Watched).", q: "Last night, I ___ a ghost story.", a: ["watch", "watched", "watching"], c: 1, img:"2e84570d-0a63-4def-9dfb-db2d31ccebaa.png"},
+    {t: "Comparatives", e: "Añadimos -ER than para comparar (Smaller than, Faster than).", q: "A plane is ___ than a car.", a: ["faster", "fastest", "fast"], c: 0, img:"Comparative-Adjectives-and-Irregular-Adjectives-Table-Examples-1024x894.jpg"},
+    {t: "Superlatives", e: "Usamos THE + -EST para el más grande/alto (The tallest).", q: "Mount Everest is ___ mountain.", a: ["the highest", "higher", "high"], c: 0, img:"superlatives.png"},
+    {t: "Prepositions", e: "In (dentro), On (sobre), Under (debajo), Between (entre).", q: "The letter B is ___ A and C.", a: ["next to", "behind", "between"], c: 2, img:"prepositions.png"},
+    {t: "Future 'Going to'", e: "Planes: Subject + verb To Be + going to + verb.", q: "Tomorrow, I ___ visit my grandma.", a: ["go to", "am going to", "going"], c: 1, img:"going to.png"},
+    {t: "Possessive 'S", e: "Indica posesión: 'Peter's dog' = el perro de Peter.", q: "This is my ___ car (The car of my brother).", a: ["brothers", "brother's", "brother"], c: 1, img:"possesives.png"},
+    {t: "Adverbs", e: "Describen la acción: Quickly (rápido), Slowly (lento).", q: "The turtle moves very ___.", a: ["slowly", "quickly", "happy"], c: 0, img:"adverbs.png"},
+    {t: "Body Parts", e: "Shoulders (hombros), Knees (rodillas), Toes (dedos del pie).", q: "You use your ___ to hear music.", a: ["Eyes", "Ears", "Mouth"], c: 1, img:"parts of body.png"},
+    {t: "Daily Routine", e: "Wake up (despertar), Brush teeth (lavar dientes), Go to bed.", q: "I ___ my teeth every morning.", a: ["wash", "brush", "clean"], c: 1, img:"daily routine.png"},
+    {t: "Food", e: "Vegetables: Carrots, Potatoes. Fruit: Apple, Banana, Grapes.", q: "Which one is a fruit?", a: ["Carrot", "Potato", "Apple"], c: 2, img:"food.png"},
+];
+
+const b1_pool = [
+    {t: "Present Perfect", e: "Have/Has + Participio. Para experiencias (I have been to Paris).", q: "I ___ never seen a real tiger.", a: ["has", "do", "have"], c: 2, img:"present perfect.png"},
+    {t: "Modal: Should", e: "Consejos. 'You should eat healthy'.", q: "You look sick. You ___ see a doctor.", a: ["should", "mustn't", "would"], c: 0, img:"modal should.png"},
+    {t: "Passive Voice", e: "Object + To Be + Past Participle.", q: "The telephone ___ invented by Bell.", a: ["is", "were", "was"], c: 2, img:"passive voice.png"},
+    {t: "1st Conditional", e: "If + Present simple, Will + verb.", q: "If I study hard, I ___ the exam.", a: ["pass", "will pass", "passed"], c: 1, img:"1st conditional.png"},
+    {t: "Past Continuous", e: "Acción en progreso en el pasado: Was/Were + -ING.", q: "They ___ playing when it started to rain.", a: ["was", "were", "are"], c: 1, img:"past continuos.png"},
+    {t: "Relative Clauses", e: "Who (personas), Which (cosas), Where (lugares).", q: "A baker is a person ___ makes bread.", a: ["which", "where", "who"], c: 2, img:"relative clauses.png"},
+    {t: "Modal: Must", e: "Obligación o prohibición (Mustn't).", q: "You ___ touch the fire. It's dangerous!", a: ["mustn't", "should", "don't"], c: 0, img:"modal must.png"},
+    {t: "Used to", e: "Acciones que hacías antes pero ya no.", q: "I ___ play with dolls when I was 5.", a: ["use to", "used to", "am used to"], c: 1, img:"used to.png"},
+    {t: "Already / Yet", e: "Already (ya - afirmativo), Yet (aún - negativo/pregunta).", q: "I haven't finished my homework ___.", a: ["already", "just", "yet"], c: 2, img:"already yet.png"},
+    {t: "2nd Conditional", e: "Situaciones imaginarias: If + Past, Would + verb.", q: "If I won the lottery, I ___ buy a mansion.", a: ["will", "would", "did"], c: 1, img:"2nd conditional.png"}
+];
+
+// Llenar las 60 casillas sin repetir secuencialmente
+for(let i=1; i<=60; i++) {
+    let lvl, color, data;
+    if(i <= 20) {
+        lvl = "A1"; color="cell-a1";
+        data = a1_pool[(i-1) % a1_pool.length];
+    } else if(i <= 40) {
+        lvl = "A2"; color="cell-a2";
+        data = a2_pool[(i-1) % a2_pool.length];
+    } else {
+        lvl = "B1"; color="cell-b1";
+        data = b1_pool[(i-1) % b1_pool.length];
+    }
+    gameData.push({ id: i, lvl, color, ...data });
+}
+
+let currentPos = 0;
+let lives = 3;
+
+function init() {
+    const board = document.getElementById('board-container');
+    gameData.forEach(item => {
+        const d = document.createElement('div');
+        d.className = `cell ${item.color}`;
+        d.id = `c-${item.id}`;
+        d.innerHTML = `<span>${item.id}</span><small style="font-size:9px">${item.t}</small>`;
+        board.appendChild(d);
+    });
+    updateLives();
+}
+
+function updateLives() {
+    document.getElementById('lives-container').innerText = "❤️".repeat(lives);
+    if(lives <= 0) {
+        alert("💥 ¡Oh no! Intenta nuevamente 💥");
+        location.reload();
+    }
+}
+
+function rollDice() {
+    const diceDisplay = document.getElementById('dice-val');
+    const rollBtn = document.getElementById('roll-button');
+    rollBtn.disabled = true;
+    diceDisplay.classList.add('rolling');
+    
+    let counter = 0;
+    const interval = setInterval(() => {
+        diceDisplay.innerText = Math.floor(Math.random() * 6) + 1;
+        counter++;
+        if(counter > 12) {
+            clearInterval(interval);
+            diceDisplay.classList.remove('rolling');
+            const finalRoll = Math.floor(Math.random() * 6) + 1;
+            diceDisplay.innerText = finalRoll;
+            setTimeout(() => {
+                movePlayer(finalRoll);
+                rollBtn.disabled = false;
+            }, 400);
+        }
+    }, 80);
+}
+
+function movePlayer(steps) {
+    currentPos += steps;
+    if(currentPos > 60) currentPos = 60;
+    
+    document.querySelectorAll('.cell').forEach(c => c.classList.remove('active'));
+    const target = document.getElementById(`c-${currentPos}`);
+    target.classList.add('active');
+    
+    document.getElementById('pos-text').innerText = currentPos;
+    document.getElementById('current-lvl-text').innerText = gameData[currentPos-1].lvl;
+    setTimeout(() => showExplanation(currentPos - 1), 600);
+}
+
+function showExplanation(idx) {
+    const data = gameData[idx];
+    const modal = document.getElementById('modal');
+    const content = document.getElementById('modal-content');
+    modal.style.display = 'flex';
+    
+    content.innerHTML = `
+        <h1 style="color:#6200ea; font-family:'Fredoka One'; font-size:38px;">${data.t}</h1>
+        <div class="expla-card">
+            <h3 style="font-size:24px; color:#2c3e50;">💡 Lección rápida:</h3>
+            <p style="font-size:22px; line-height:1.5; color:#444;">${data.e}</p>
+            <div style="text-align:center; margin-top:15px;">
+    <img 
+        src="img/${data.img}" 
+        alt="${data.t}" 
+        style=width:360px;
+    max-width:95%;
+    height:auto;
+    object-fit:contain;
+    border-radius:20px;
+    border:4px solid #ccc;
+    >
+
+            </div>
+        </div>
+        <button class="btn-dice" onclick="showQuestion(${idx})">¡ACEPTO EL RETO!</button>
+    `;
+}
+
+function showQuestion(idx) {
+    const data = gameData[idx];
+    const content = document.getElementById('modal-content');
+    let opts = "";
+    data.a.forEach((o, i) => {
+        opts += `<div class="opt-btn" onclick="check(${idx}, ${i})">${o}</div>`;
+    });
+
+    content.innerHTML = `
+        <h2 style="font-size:32px; color:#ff9100;">🌟 PREGUNTA #${data.id} 🌟</h2>
+        <div style="background:#f0f7ff; padding:25px; border-radius:20px; margin-bottom:20px; border:4px solid #6200ea;">
+            <p style="font-size:28px; font-weight:900; color:#2c3e50;">${data.q}</p>
+        </div>
+        <div class="option-grid">${opts}</div>
+    `;
+}
+
+function check(idx, choice) {
+    const data = gameData[idx];
+    if(choice === data.c) {
+        alert("✨ ¡EXCELENTE! ✨\n¡Eres muy inteligente!");
+    } else {
+        lives--;
+        alert("😲 ¡UPS!\nLa respuesta correcta era: " + data.a[data.c] + "\nPerdiste una vida ❤️");
+        updateLives();
+    }
+    document.getElementById('modal').style.display = 'none';
+    
+    if(currentPos === 60) {
+        alert("🏆🎉 ¡FELICITACIONES! 🎉🏆\n¡Eres el maestro del inglés! Llegaste a la meta final.");
+        location.reload();
+    }
+}
+
+init();
+</script>
+
+</body>
+</html>
