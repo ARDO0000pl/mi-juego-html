@@ -182,6 +182,14 @@
 </head>
 <body>
 
+<footer id="footer" style="margin-top:30px; padding:15px; background:#6200ea; color:white; font-family:'Nunito', sans-serif; font-size:16px;">
+    © <span id="year"></span> Emmily Johanna Gonzalez Mejias - Bogotá
+</footer>
+<!-- Scripts del juego -->
+<script>
+// Inicializa tu juego
+init();
+    
 <header>🦢 MEGA ENGLISH GOOSE 60</header>
 
 <div id="status-bar">
@@ -381,22 +389,21 @@ function check(idx, choice) {
         location.reload();
     }
 }
-
-<script>
 init();
+<script>
+
 
 // Mostrar año actual automáticamente
-const yearSpan = document.getElementById('year');
-const now = new Date();
-yearSpan.innerText = now.getFullYear();
+window.addEventListener('DOMContentLoaded', () => {
+    const yearSpan = document.getElementById('year');
+    const now = new Date();
+    yearSpan.innerText = now.getFullYear();
+});
 </script>
-
-<footer id="footer" style="margin-top:30px; padding:15px; background:#6200ea; color:white; font-family:'Nunito', sans-serif; font-size:16px;">
-    © <span id="year"></span> Emmily Johanna Gonzalez Mejias - Bogotá
-</footer>
 
 </body>
 </html>
+
 
 
 
