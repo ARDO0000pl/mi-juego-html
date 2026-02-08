@@ -237,35 +237,78 @@
 <script>
 const gameData = [];
 
-// POOLS DE PREGUNTAS CON RUTAS DE IMAGEN CORREGIDAS
+// --- BANCO DE PREGUNTAS AMPLIADO (V2) ---
+
 const a1_pool = [
-    {t: "Greetings", e: "¡Hola! Usamos 'Good morning' (mañana) y 'Good night' (despedida noche).", q: "It's 8:00 AM, you say...", a: ["Good morning", "Good night", "Good afternoon"], c: 0, img:"img/Gemini_Generated_Image_wrln9uwrln9uwrln.png"},
-    {t: "Verbo To Be", e: "I am, You are, He/She/It is.", q: "The dog ___ big.", a: ["am", "are", "is"], c: 2, img:"img/English-Pronouns.jpg"},
-    {t: "Colores", e: "Red + Blue = Purple.", q: "Mixing Red and Blue gives...", a: ["Green", "Purple", "Orange"], c: 1, img:"img/Gemini_Generated_Image_rzt5vsrzt5vsrzt5.png"},
-    {t: "School", e: "Eraser = Borrador.", q: "You use an ___ to fix mistakes.", a: ["Eraser", "Pencil", "Ruler"], c: 0, img:"img/Gemini_Generated_Image_z6ly3lz6ly3lz6ly.png"},
-    {t: "Family", e: "Father's sister = Aunt.", q: "Your father's sister is your...", a: ["Uncle", "Aunt", "Cousin"], c: 1, img:"img/Captura de pantalla_7-2-2026_192958_tse4.mm.bing.net.jpeg"},
-    {t: "Animals", e: "Cow says Moo.", q: "This animal gives milk.", a: ["Pig", "Cow", "Chicken"], c: 1, img:"img/animals.png"},
-    {t: "Weather", e: "Rainy = Lluvioso.", q: "Take an umbrella! It is ___.", a: ["Sunny", "Rainy", "Cloudy"], c: 1, img:"img/e40ff2c11aecddc3e89da335e16e2871.png"}
+
+    {t: "Greetings", e: "¡Hola! Usamos 'Good morning' (mañana), 'Good afternoon' (tarde), 'Good evening' (noche al llegar) y 'Good night' (noche al irse).", q: "It's 8:00 AM, you say...", a: ["Good morning", "Good night", "Good afternoon"], c: 0, img:"Gemini_Generated_Image_wrln9uwrln9uwrln.png"
+
+},
+
+    {t: "Verbo To Be", e: "I am, You are, He/She/It is, We are, They are.", q: "The dog ___ very big and brown.", a: ["am", "are", "is"], c: 2, img:"English-Pronouns.jpg"},
+
+    {t: "Colores", e: "Red + Blue = Purple. Blue + Yellow = Green. Red + Yellow = Orange.", q: "Mixing Red and Blue gives you...", a: ["Green", "Purple", "Orange"], c: 1, img:"Gemini_Generated_Image_rzt5vsrzt5vsrzt5.png"},
+
+    {t: "School Objects", e: "Pencil (lápiz), Eraser (borrador), Ruler (regla), Backpack (mochila).", q: "You use an ___ to fix mistakes.", a: ["Eraser", "Pencil", "Ruler"], c: 0, img:"Gemini_Generated_Image_z6ly3lz6ly3lz6ly.png"},
+
+    {t: "Family", e: "Father's sister = Aunt. Mother's brother = Uncle. Aunt's son = Cousin.", q: "Your father's sister is your...", a: ["Uncle", "Aunt", "Cousin"], c: 1, img:src="Captura de pantalla_7-2-2026_192958_tse4.mm.bing.net.jpeg"},
+
+    {t: "Numbers 1-20", e: "11 (eleven), 12 (twelve), 13 (thirteen), 15 (fifteen).", q: "What is 7 + 8?", a: ["Thirteen", "Fourteen", "Fifteen"], c: 2, img:"afb15585b6e797d5a7b7dc75403b48b9.jpg"},
+
+    {t: "Feelings", e: "Happy (feliz), Sad (triste), Angry (enojado), Thirsty (sediento).", q: "I won a prize! I am so ___!", a: ["Sad", "Tired", "Happy"], c: 2, img:"feelings.png"},
+
+    {t: "Animals", e: "Cow (vaca), Pig (cerdo), Chicken (pollo), Sheep (oveja).", q: "This animal gives us milk and says 'Moo'.", a: ["Pig", "Cow", "Chicken"], c: 1, img:"animals.png"},
+
+    {t: "The Weather", e: "Sunny (soleado), Rainy (lluvioso), Snowy (nieve), Windy (viento).", q: "Take an umbrella! It is ___ today.", a: ["Sunny", "Rainy", "Cloudy"], c: 1, img:"e40ff2c11aecddc3e89da335e16e2871.png"},
+
+    {t: "Professions", e: "Doctor (médico), Teacher (profe), Chef (cocinero), Pilot (piloto).", q: "A ___ cooks delicious food in a restaurant.", a: ["Chef", "Doctor", "Pilot"], c: 0, img:"professions.png"}
+
 ];
 
 const a2_pool = [
-    {t: "Past Simple", e: "Regular verbs end in -ED.", q: "Last night, I ___ TV.", a: ["watch", "watched", "watching"], c: 1, img:"img/2e84570d-0a63-4def-9dfb-db2d31ccebaa.png"},
-    {t: "Comparatives", e: "Use -ER than (Faster than).", q: "A plane is ___ than a car.", a: ["faster", "fastest", "fast"], c: 0, img:"img/Comparative-Adjectives-and-Irregular-Adjectives-Table-Examples-1024x894.jpg"}
+
+    {t: "Past Simple", e: "Acciones terminadas. Verbos regulares: -ED (Watch -> Watched).", q: "Last night, I ___ a ghost story.", a: ["watch", "watched", "watching"], c: 1, img:"2e84570d-0a63-4def-9dfb-db2d31ccebaa.png"},
+    {t: "Comparatives", e: "Añadimos -ER than para comparar (Smaller than, Faster than).", q: "A plane is ___ than a car.", a: ["faster", "fastest", "fast"], c: 0, img:"Comparative-Adjectives-and-Irregular-Adjectives-Table-Examples-1024x894.jpg"},
+    {t: "Superlatives", e: "Usamos THE + -EST para el más grande/alto (The tallest).", q: "Mount Everest is ___ mountain.", a: ["the highest", "higher", "high"], c: 0, img:"superlatives.png"},
+    {t: "Prepositions", e: "In (dentro), On (sobre), Under (debajo), Between (entre).", q: "The letter B is ___ A and C.", a: ["next to", "behind", "between"], c: 2, img:"prepositions.png"},
+    {t: "Future 'Going to'", e: "Planes: Subject + verb To Be + going to + verb.", q: "Tomorrow, I ___ visit my grandma.", a: ["go to", "am going to", "going"], c: 1, img:"going to.png"},
+    {t: "Possessive 'S", e: "Indica posesión: 'Peter's dog' = el perro de Peter.", q: "This is my ___ car (The car of my brother).", a: ["brothers", "brother's", "brother"], c: 1, img:"possesives.png"},
+
+    {t: "Adverbs", e: "Describen la acción: Quickly (rápido), Slowly (lento).", q: "The turtle moves very ___.", a: ["slowly", "quickly", "happy"], c: 0, img:"adverbs.png"},
+
+    {t: "Body Parts", e: "Shoulders (hombros), Knees (rodillas), Toes (dedos del pie).", q: "You use your ___ to hear music.", a: ["Eyes", "Ears", "Mouth"], c: 1, img:"parts of body.png"},
+
+    {t: "Daily Routine", e: "Wake up (despertar), Brush teeth (lavar dientes), Go to bed.", q: "I ___ my teeth every morning.", a: ["wash", "brush", "clean"], c: 1, img:"daily routine.png"},
+
+    {t: "Food", e: "Vegetables: Carrots, Potatoes. Fruit: Apple, Banana, Grapes.", q: "Which one is a fruit?", a: ["Carrot", "Potato", "Apple"], c: 2, img:"food.png"},
+
 ];
+
+
 
 const b1_pool = [
-    {t: "Present Perfect", e: "Have/Has + Past Participle.", q: "I ___ never seen a tiger.", a: ["has", "do", "have"], c: 2, img:"img/present perfect.png"},
-    {t: "Modal: Should", e: "Use 'Should' for advice.", q: "You look sick. You ___ see a doctor.", a: ["should", "mustn't", "would"], c: 0, img:"img/modal should.png"}
-];
 
-// Generar las 60 casillas
-for(let i=1; i<=60; i++) {
-    let lvl, color, data;
-    if(i <= 20) { lvl = "A1"; color="cell-a1"; data = a1_pool[(i-1) % a1_pool.length]; }
-    else if(i <= 40) { lvl = "A2"; color="cell-a2"; data = a2_pool[(i-1) % a2_pool.length]; }
-    else { lvl = "B1"; color="cell-b1"; data = b1_pool[(i-1) % b1_pool.length]; }
-    gameData.push({ id: i, lvl, color, ...data });
-}
+    {t: "Present Perfect", e: "Have/Has + Participio. Para experiencias (I have been to Paris).", q: "I ___ never seen a real tiger.", a: ["has", "do", "have"], c: 2, img:"present perfect.png"},
+
+    {t: "Modal: Should", e: "Consejos. 'You should eat healthy'.", q: "You look sick. You ___ see a doctor.", a: ["should", "mustn't", "would"], c: 0, img:"modal should.png"},
+
+    {t: "Passive Voice", e: "Object + To Be + Past Participle.", q: "The telephone ___ invented by Bell.", a: ["is", "were", "was"], c: 2, img:"passive voice.png"},
+
+    {t: "1st Conditional", e: "If + Present simple, Will + verb.", q: "If I study hard, I ___ the exam.", a: ["pass", "will pass", "passed"], c: 1, img:"1st conditional.png"},
+
+    {t: "Past Continuous", e: "Acción en progreso en el pasado: Was/Were + -ING.", q: "They ___ playing when it started to rain.", a: ["was", "were", "are"], c: 1, img:"past continuos.png"},
+
+    {t: "Relative Clauses", e: "Who (personas), Which (cosas), Where (lugares).", q: "A baker is a person ___ makes bread.", a: ["which", "where", "who"], c: 2, img:"relative clauses.png"},
+
+    {t: "Modal: Must", e: "Obligación o prohibición (Mustn't).", q: "You ___ touch the fire. It's dangerous!", a: ["mustn't", "should", "don't"], c: 0, img:"modal must.png"},
+
+    {t: "Used to", e: "Acciones que hacías antes pero ya no.", q: "I ___ play with dolls when I was 5.", a: ["use to", "used to", "am used to"], c: 1, img:"used to.png"},
+
+    {t: "Already / Yet", e: "Already (ya - afirmativo), Yet (aún - negativo/pregunta).", q: "I haven't finished my homework ___.", a: ["already", "just", "yet"], c: 2, img:"already yet.png"},
+
+    {t: "2nd Conditional", e: "Situaciones imaginarias: If + Past, Would + verb.", q: "If I won the lottery, I ___ buy a mansion.", a: ["will", "would", "did"], c: 1, img:"2nd conditional.png"}
+
+];
 
 let currentPos = 0;
 let lives = 3;
@@ -366,5 +409,6 @@ init();
 </script>
 </body>
 </html>
+
 
 
